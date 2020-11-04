@@ -1,0 +1,145 @@
+LAB - IAM - API Keys - Java SDK
+
+> Create an EC2 instance with Amazon linux 2 & Connect 
+	{ verify with uname Command }
+
+> Stop the instance
+
+> Create an IAM User(youtube) with Programmatic access
+	{ Save Access Key & Secret Key }
+
+> Download the Code 
+	https://github.com/ravi2krishna/aws-s3-java-api-keys/archive/master.zip
+
+> Optional - Notepad++	
+
+> Find out
+
+	> scp 
+
+	> wget
+
+	> maven
+
+	> mvn package
+
+
+
+Lab Setup
+
+> First Install Gitbash inside your machines - WIN
+
+> Install Notepad++ on WIN machine	
+
+	> Launching an Linux Instance/Server to setup Java Application
+
+	> Login to AWS Account -> Services -> Compute -> EC2 -> Launch Instance -> Select Amazon Linux 2 AMI -> Next Configure Instance Details -> Next Add Storage -> Next Add Tags -> Configure Security Group -> Review and Launch -> Launch -> Select New Key pair -> Key pair name (youtube)[Never use spaces and uppercase in pem file] -> Download Key Pair -> Launch Instances -> Scroll down page -> Click View Instances
+	
+	> After instance state is in Running
+
+	> Connect to the instance using following instructions, 
+> Best Practise - only read permission on pem file
+	> open gitbash
+> cd ~/downloads
+> chmod 400 youtube.pem
+
+> Syntax for connecting to EC2 Server
+
+   	 > ssh -i <pemkey> username@Public-IP
+
+   	 > ssh -i youtube.pem ec2-user@3.249.217.74
+	   { for you this 3.249.217.74 will be different check from EC2 Page }
+
+> To confirm if the above operation is successful or not, run the following command "uname" -> if it prompts Linux, you got succeeded in connecting
+
+
+
+
+
+ > Operations to do on Local machine
+
+   	 > Download the Zip file from Github
+
+   	> Page Link : https://github.com/ravi2krishna/aws-s3-java-api-keys
+
+> Zip File Link, You can directly download by file using link below : https://github.com/ravi2krishna/aws-s3-java-api-keys/archive/master.zip
+
+> Extract and navigate to src/main/..../App.java
+
+> Install Notepad++(editor) application
+
+ > Operations to do from IAM
+
+	> Create an IAM user "youtube" with programmatic access & download the csv file, which contains Access & Secret Key
+
+ > Operations to do from Local Workstation(WIN/MAC)
+
+	> Make changes in the file App.java which is located inside src/main/java/com/ravi/apikeys/App.java
+> Right click App.java file and edit with Notepad++
+	 > Modify ACK & SCK
+   	 > Modify Bucketname(no spaces & upper cases & should be unique)
+   	 > Modify the location { /home/ec2-user/video.mp4 }
+	 > Save changes to App.java file
+	 > Delete old zip file
+	 > Create a new zip with new changes happened with App.java file i.e right click the directory > Send to compressed zip file
+
+> Now copy the new zip file to AWS EC2 server with scp command
+
+> Make sure you run the scp command in local workstation i.e open new Gitbash session from Start Menu again, with this you see two sessions of gitbash, one is connected to remote server i.e AWS and another is w.r.t local workstation
+
+
+
+   	 > Syntax for copying file  to EC2 Server
+		
+		Note : run below command in the newly opened gitbash session
+	
+   		 > scp -i <pemkey> <file-to-copy> ec2-user@Public-IP:~
+
+   		 > scp -i youtube.pem aws...master.zip ec2-user@3.249.217.74:~
+				{ 3.249.217.74 this will change for you }
+
+> Get back to older session of Gitbash i.e remote server and run the command
+	> ls 
+	{ you should see the zip file aws-s3-java-api-keys.zip }
+
+> On AWS EC2 server install the following components for
+
+   	 > sudo yum -y install java-1.8.0
+
+   	 > sudo yum -y install java-1.8.0-devel
+
+   	 > sudo yum -y install maven
+	
+> Now let’s extract the zip file aws-s3-java-api-keys.zip
+
+	> unzip aws-s3-java-api-keys.zip
+	
+> ls 
+	{ now you’ll see the directory aws-s3-java-api-keys }
+
+> Download the video file using the following command
+	
+> wget -O /home/ec2-user/video.mp4  https://file-examples.com/wp-content/uploads/2017/04/file_example_MP4_480_1_5MG.mp4
+
+
+
+> Now package the application using following command i.e convert the source code into executable code 
+
+	> ls ~/aws-s3-java-api-keys
+	> cd ~/aws-s3-java-api-keys
+	> mvn package	
+		{ converts source code into executable binary }
+	> ls ~/aws-s3-java-api-keys
+		{ now you see target, where the executable is generated }
+
+> Run the executable using following command
+
+>  cd ~/aws-s3-java-api-keys
+
+> java -jar target/AWS-S3-API-Keys-1.0-SNAPSHOT.jar
+
+> You will get access denied error, as we did not attach the policy to IAM user youtube, apply S3FullPolicy to youtube user
+
+	> java -jar target/AWS-S3-API-Keys-1.0-SNAPSHOT.jar
+
+Now you can check the S3 you should be seeing the bucket and video inside the bucket

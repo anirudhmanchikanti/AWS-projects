@@ -1,0 +1,57 @@
+LAB - Auto Scaling
+
+SNS LAB
+
+
+	-> Services -> SNS -> create Topic -> Name { mail } -> 
+
+			Subscription -> create subscription -> protocol { email } -> input email id -> create subscription 
+
+			Open your email client --> Confirm the subscription by logging to your inbox
+
+
+AMI
+
+    -> Launch an Amazon Linux 2 Instance and setup food website with service enabled
+			
+			sudo yum install -y git
+			sudo yum install -y httpd
+			sudo systemctl enable httpd
+			sudo systemctl start httpd
+	        sudo git clone https://github.com/ravi2krishna/food.git /var/www/html
+
+	-> Then create an AMI for the above instance
+
+		Select Instance -> Actions -> Create Image
+
+	-> Launch another instance by selecting the above AMI and browse the IP, the food site should load
+
+	-> Now terminate both the instances	 	
+
+
+Launch Configuration
+
+	
+	-> Create a security group called Food-SG and allow the SSH and HTTP traffic from anywhere
+
+	-> Services -> EC2 -> Auto Scaling Section -> Click Launch Configurations -> Create Launch Configuration -> Select the food AMI -> In Configuration details step, under Advanced Details, IP Address Type, Select Assign a public IP address to every Instance -> In security groups select the existing security group Food-SG to allow the SSH & HTTP traffic -> Review -> Create Launch Configuration
+
+
+
+
+Auto Scaling Group
+
+
+	-> Services -> EC2 -> Auto Scaling Section -> Click Auto Scaling Groups -> Create Auto Scaling group from the earlier launch configuration we used -> Group name - ASG -> Group Size : Launch with two instances -> Network : Choose the VPC -> Subnets : Select the public subnets to launch the instances -> Configure Scaling Policies -> Select the Use scaling policies to adjust the capacity -> Scale in between the instances ie choosing the MIN and MAX no of the instances so select between 2 & 5 -> Scroll down and click on the link : scale the auto scaling using step or simple scaling policies -> 
+	Increase group size and Decrease Group Size 
+
+	-> In Increase group size -> Add New Alarm -> Send notification to : select the topic(email) -> Whenever the Average of CPU Utilization is >=70 -> Create Alarm 
+
+	Take action : Add 1 Instance
+
+	-> In Decrease group size -> Add New Alarm -> Send notification to : select the topic -> Whenever the Average of CPU Utilization is <=20 -> Create Alarm 
+
+	Take action : Remove 1 Instance
+
+	-> Next Configure Notification -> Configure Tags -> Review -> Create Auto Scaling Group
+

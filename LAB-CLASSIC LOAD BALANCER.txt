@@ -1,0 +1,20 @@
+LAB - Classic Load Balancer
+
+> Launch Two Instances in two different Public Subnets with Amazon Linux 2 as Operating System and tag them as Web Server 1 (Public Subnet 1) & Web Server 2 (Public Subnet 2)
+
+> In Web Server 1 Instance && Web Server 2
+
+	> Install and start the httpd(apache) service
+
+		> sudo yum -y install httpd
+		> sudo systemctl start httpd
+
+	> sudo vim /var/www/html/index.html
+
+		 <h1>Application Loading</h1> 
+
+	> Browse the IP address of both web servers and the page should display Application Loading
+
+Classic Load Balancer Setup
+
+> Services > EC2 > Load Balancers > Create Load Balancer > Select Classic Load Balancer -> Name (CLB) >> Select your VPC >> Scroll Down and Select Subnets where web server instances launched i.e Web Server 1 and Web Server 2 > Assign HTTP(Port 80) security group > Next  > Next Health Checks : Ping Path(/index.html) > Add EC2 Instances > Select Web Server 1 and Web Server 2 > Next > Create

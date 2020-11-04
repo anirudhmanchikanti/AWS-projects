@@ -1,0 +1,166 @@
+RDS LAB - IAAS
+
+Lab - Application Server Setup
+
+
+	> Launch an instance in Public Subnet with Amazon Linux 2 OS tag as App Server
+
+	> Like we installed Apache Web Server to deploy the website, we need to install Apache Tomcat to go with dynamic applications
+
+	> Tomcat requires Java to function
+
+	> Install Java
+
+			> sudo yum -y install java-1.8.0 java-1.8.0-devel	
+
+	> Download Tomcat Binary
+	
+		> wget https://mirrors.estointernet.in/apache/tomcat/tomcat-7/v7.0.105/bin/apache-tomcat-7.0.105.zip
+
+
+
+	> Unzip Tomcat
+
+		> unzip apache-tomcat-7.0.105.zip
+
+		> cd apache-tomcat-7.0.105	
+
+> Set the executable permissions to start the server
+	
+		> chmod u+x bin/startup.sh		
+		> chmod u+x bin/catalina.sh		
+
+	
+> Starting the server
+
+		> Tomcat runs on port 8080
+		> sudo netstat -ntpl | grep 8080	
+
+		> cd bin
+		> ./startup.sh { Hit enter }
+
+		> sudo netstat -ntpl | grep 8080	
+
+	> Browse the tomcat server by public-ip:8080, you will be able to see the Tomcat page
+	
+> Also apply a custom tcp rule with port 8080 from anywhere in security  group, as tomcat works on port 8080 by default 
+
+> Go back to app server where tomcat is installed and perform below tasks
+
+-> Install Git 
+	
+		> sudo yum -y install git
+		> git --version { confirm }
+
+	-> Install Maven
+	
+		> sudo yum -y install maven
+		> mvn --version { confirm }
+
+	-> Fetch Application Code
+
+> cd /home/ec2-user
+
+		> git clone -b aws https://github.com/ravi2krishna/aws-rds-java.git	
+
+
+
+
+
+MySQL DB Setup
+
+--> Launch an instance using Amazon Linux 2 in PRIVATE subnet tag as DB Server
+
+--> Instructions to setup DB Server 
+
+> Download MYSQL
+
+> wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+
+	> sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm
+
+	> sudo yum -y install mysql-server
+
+	> sudo systemctl start mysqld
+
+		> DB Port : 3306
+		> sudo netstat -ntpl | grep 3306	
+		> sudo mysql_secure_installation 
+	
+			> Hit Enter and set the root password(it will not show password being typed, just enter password and hit the enter key and confirm password once again), hit Y and set password then press Y for every step, which are best practises for Database setup as we are not allowing root access from outside and removing test database etc
+
+		> mysql -u root -p
+			{ enter the password to login } 
+
+		> show databases;	
+
+> create database jwt;
+
+		> use jwt;
+
+
+
+Create User Table with below query
+
+CREATE TABLE `USER` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `first_name` varchar(45) NOT NULL,
+  `last_name` varchar(45) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  `regdate` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+
+	
+	> select * from USER;
+
+	> create user ravi identified by 'Admin123*';
+
+	>	Syntax not command : grant all on jwt.* to 'ravi'@'app-server-private-dns' identified by 'Admin123*';
+
+	> grant all on jwt.* to 'ravi'@'your-tomcat-app-server-private-dns' identified by 'Admin123*';
+
+	> flush privileges;
+
+
+
+
+> get back to App Server
+
+> cd aws-rds-java
+
+	> vim src/main/webapp/login.jsp
+
+	Change the line no 6 that says
+
+		    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jwt",
+            "ravi", "Admin123*");
+
+            						TOO
+
+            Connection con = DriverManager.getConnection("jdbc:mysql://db-server-private-dns:3306/jwt",
+            "ravi", "Admin123*");
+
+
+    > vim src/main/webapp/userRegistration.jsp        
+
+    Change the line no 9 that says
+
+		    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jwt",
+            "ravi", "Admin123*");
+
+            						TOO
+
+            Connection con = DriverManager.getConnection("jdbc:mysql://db-server-private-dns:3306/jwt",
+            "ravi", "Admin123*");
+
+
+    > mvn package 
+
+    > cp /home/ec2-user/aws-rds-java/target/LoginWebApp.war /home/ec2-user/apache-tomcat-7.0.96/webapps	       
+
+    > Browse : http://App-Server-Public-IP:8080/LoginWebApp
+
+Now you can Register a user and verify the same by logging in

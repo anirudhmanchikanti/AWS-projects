@@ -1,0 +1,62 @@
+LAB - AMI's
+
+ 
+	> AMI - OS | Apps | Additional S/W's 
+
+	
+	> Ecomm-AMI - Amazon Linux 2 | Ecomm | Git & HTTPD
+
+
+LAB - Setup	
+
+	> Launch Linux instance with AMI :: Amazon Linux 2 in public subnet
+
+	> Install an web application using the following procedure
+
+	> Installing Apache Web Server
+
+		-> sudo rpm -qi httpd
+		-> sudo yum -y install httpd 
+		-> sudo rpm -qi httpd
+
+	> Starting the Apache Web Server
+	
+		-> sudo systemctl status httpd	
+		-> sudo systemctl start httpd
+		-> sudo systemctl enable httpd
+		-> sudo systemctl status httpd
+		
+
+	> Browse the Public IP of Instance on BROWSER and you should be seeing the sample test app
+
+		-> sudo ls /var/www/html
+
+	> Generally the code in the organizations will be stored in Source Code Management Tools and for us it is Github
+
+		-> sudo rpm -qi git
+		-> sudo yum -y install git 
+		-> sudo rpm -qi git
+
+		-> Git is client and we need client to access github
+		
+		-> sudo git clone https://github.com/ravi2krishna/ecomm-temp.git /var/www/html
+		-> sudo ls /var/www/html
+		
+
+
+	> Browse the Public IP of Instance on BROWSER and you should be seeing the Shopping app	
+
+AMI Process
+
+	
+	> To create an AMI do the following
+
+		-> EC2 Dashboard -> Left side we got AMI's -> Click AMI's 
+
+		-> select Instance -> Right click -> Image -> Create Image { keep all default }
+
+		-> EC2 Dashboard -> Left side we got AMI's -> Click AMI's
+
+		-> Checkout Snapshots
+
+	    -> EC2 Dashboard -> Left side we got AMI's -> Click AMI's  -> Select AMI -> Launch Instance 

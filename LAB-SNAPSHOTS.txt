@@ -1,0 +1,44 @@
+LAB - Snapshots
+	> Launch Linux instance with AMI :: Amazon Linux 2 in public subnet
+
+	> Install an web application using the following procedure
+
+	> Installing Apache Web Server
+
+		-> sudo rpm -qi httpd
+		-> sudo yum -y install httpd 
+		-> sudo rpm -qi httpd
+
+	> Starting the Apache Web Server
+	
+		-> sudo systemctl status httpd	
+		-> sudo systemctl start httpd
+		-> sudo systemctl enable httpd
+		-> sudo systemctl status httpd
+		
+
+	> Browse the Public IP of Instance on BROWSER and you should be seeing the sample test a
+
+		-> sudo ls /var/www/html
+
+	> Generally the code in the organizations will be stored in Source Code Management Tools and for us it is Github
+
+		-> sudo rpm -qi git
+		-> sudo yum -y install git 
+		-> sudo rpm -qi git
+
+		-> Git is client and we need client to access github
+		
+		-> sudo git clone https://github.com/ravi2krishna/ecomm-temp.git /var/www/html
+		-> sudo ls /var/www/html
+
+	> Browse the Public IP of Instance on BROWSER and you should be seeing the Shopping app	
+
+-> Taking snapshots against volumes
+	
+-> Select the volumes that is attached to instance
+
+-> Actions -> Take Snapshot 
+	{ Now a snapshot will be available in Elastic Block Store section of EC2 dashboard }	
+
+-> Now your goal is to launch another instance with the same ecomm website from Snapshot, in another availability zone,  let's say the first instance was launched in 1A now the new instance we are launching should be in 1B with the ecomm website up and running.

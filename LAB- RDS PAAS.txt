@@ -1,0 +1,62 @@
+RDS Lab - PAAS
+
+
+	-> Services -> RDS -> List Left side menu -> CLick Subnet Groups -> Create DB Subnet Group -> Choose the VPC -> Select the Subnets -> Create
+
+
+	-> Databases -> Create Database -> Select MySQL -> Scroll down check Only > enable options eligible for RDS Free Usage Tier -> Give some name : DB instance identifier > username : ravi > password : Admin123* > Select VPC -> slect subnet group created > Public accessibility : no > uncheck Enable deletion protection at end -> Create Database
+
+	-> endpoint { DNS }
+
+	-> Replace the DNS in following files
+
+	> vim src/main/webapp/login.jsp
+
+	Change the line no 6 that says
+
+		    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jwt",
+            "ravi", "Admin123*");
+
+            						TOO
+
+            Connection con = DriverManager.getConnection("jdbc:mysql://db-server-pvt-dns:3306/jwt",
+            "ravi", "Admin123*");
+
+
+    > vim src/main/webapp/userRegistration.jsp        
+
+    Change the line no 9 that says
+
+		    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jwt",
+            "ravi", "Admin123*");
+
+            						TOO
+
+            Connection con = DriverManager.getConnection("jdbc:mysql://db-server-pvt-dns:3306/jwt",
+            "ravi", "Admin123*");
+
+    -> on App server 
+    
+    		mysql -h endpoint-rds -u ravi -p
+
+    		create databaswe jwt;
+
+    		use jwt;
+
+CREATE TABLE `USER` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `first_name` varchar(45) NOT NULL,
+  `last_name` varchar(45) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  `regdate` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = latin1;	        
+
+
+	> mvn package 
+
+	    > cp /home/ec2-user/aws-rds-java/target/LoginWebApp.war /home/ec2-user/apache-tomcat-7.0.94/webapps	       
+
+	    > Browse : http://App-Server-Public-IP:8080/LoginWebApp

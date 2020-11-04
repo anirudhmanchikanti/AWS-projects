@@ -1,0 +1,40 @@
+LAB - Userdata 
+
+Web App Setup - Amazon Linux 2
+
+> Commands that need to be executed when server is being spinned up
+
+		> Steps to Create User data
+
+		-> Launch Instance -> Use Amazon Linux 2 → Choose VPC → Subnet → Auto Assign IP(Enable) → Advanced scroll down page → User Data 
+
+	#!/bin/bash
+	yum install -y git
+	yum install -y httpd
+	systemctl start httpd
+	git clone https://github.com/ravi2krishna/food.git /var/www/html
+
+		-> SG Allow 22 & 80 → Review & Launch 
+
+		> Browse the Public IP of Instance on BROWSER and you should be seeing the food app
+
+
+Try the above same in Ubuntu 18.04, Fails
+
+Web App Setup - Ubuntu 18
+
+The Package name is not httpd but apache2 and also a default web page index.html is already available in /var/www/html
+
+
+
+Script for ubuntu server
+
+#!/bin/bash
+apt-get -y install apache2
+apt-get -y install git
+systemctl start apache2
+rm /var/www/html/index.html
+git clone https://github.com/ravi2krishna/ecomm.git /var/www/html
+
+
+Now the above issue can be fixed by accessing metadata and applying some logical operations on top of it

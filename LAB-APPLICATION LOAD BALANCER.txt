@@ -1,0 +1,38 @@
+LAB - Application Load Balancer
+
+This Lab provides a hands-on to Application Load Balancers. You'll create a load balancer that receives public HTTP traffic and sends it to your EC2 instances based on the content.
+
+Before you begin
+Complete the steps in Prepare Your VPC and EC2 Instances.
+Launch 4 EC2 instances where 2 instances (pic 1 & pic 2) with picture content and other 2 instances (video 1 & video 2) with video content
+
+Steps
+
+On all four instances create a file called index.html /var/www/html/picture.html with the content as follow <h1>Instagram Loading</h1>
+Instance - pic 1 - instance - /var/www/html/picture.html <h1>Picture1 from Insta</h1>
+Instance - pic 2 - instance - /var/www/html/picture.html <h1>Picture2 from Insta</h1>
+Instance - vid 1 - instance - /var/www/html/video.html <h1>Video1 from Insta</h1>
+Instance - vid 2 - instance - /var/www/html/video.html <h1>Video2 from Insta</h1>
+
+Now let's create target groups then will create Load balancer and will associate target groups
+Create Target Group → Target Group Name (Pictures) → Health : index.html
+Create Target Group → Target Group Name (Videos) → Health : index.html
+Now i need to register ec2 instances to their specific target groups
+Select the Pictures Target → Select Targets tab → Edit → Select Pictures instances Click Add to registered → Save
+Select the Videos Target → Select Targets tab → Edit → Select Video instances Click Add to registered → Save
+
+
+Now click create load balancer → Select Application Load balancer → Name : AppLB → Internet Facing → ipv4 → Listeners port 80 → Select proper VPC where instances are launched → Select AZ's/Subnets where instances are launched → Configure Security Settings to allow port 80 → Configure Routing → Select Existing target group → Choose Pictures → Register Targets → Review → Create → It's provisioning → Give it some time it will be active
+Copy the DNS name of load balancer and check in browser, now it's going to the Pictures target coz by default i set it to Pictures
+Now let's see how we can route the traffic based on request type
+Now select Pictures target group → Description → I can see it's associated to AppLB
+Now select Videos target group → Description → It's not associated to AppLB,  why is that ?? while creating an AppLB i should associate it to at least one target group
+Now videos target group or any additional target group will not be associated with elastic load balancer until i create content rules that point traffic to video group
+
+Now let's go back to the Elastic Load balancer select it → Listeners tab → the default action is forward to pictures → Now will create rules that is going to take traffic based on path and it will tell the App ELB where to route traffic.
+Click View/Edit rules → This is the default rule you cannot change it, but you can add new rules, Upper tab besides Rules click add(+) → Click Insert Rule → Add condition select path is → type: *video* → forward to Videos Target Group → Save
+Go back and in browser give the DNS name of load balancer with path picture.html
+http://applb-757660712.us-east-1.elb.amazonaws.com/picture.html
+
+Go back and in browser give the DNS name of load balancer with path video.html
+http://applb-757660712.us-east-1.elb.amazonaws.com/video.htm

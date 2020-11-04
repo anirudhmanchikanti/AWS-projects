@@ -1,0 +1,29 @@
+LAB - Bastion & NAT Gateway
+
+
+> Launch instance in public subnet with Amazon Linux 2 and tag it as Bastion
+
+> Allow only ssh from DL-Infra { Network } to Bastion i.e in Security Group of Bastion only SSH from DL N/W i.e search for my ip in google
+	
+> Launch instance in public subnet using Amazon Linux 2 tag it as Web Server
+
+> Allow only ssh from Bastion i.e private ip of bastion
+
+> Install httpd on Web Server
+
+> Web Server works on port 80, Allow port 80 from anywhere
+
+> Launch instance in private subnet using Amazon Linux 2 and tag it as DB Server
+
+> Allow only ssh from Bastion  i.e private ip of bastion
+
+> Download MYSQL RPM { executable }
+
+> wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+
+> Gets failed, create NAT gateway in public subnet and attach the routing in PVT Route table
+
+> Steps to create NAT Gateway: VPC Dashboard > NAT Gateways > Create NAT Gateway > Select the Public Subnet > Elastic IP allocation: create new EIP > Create NAT Gateway 
+
+Once NAT Gateway is created, attach the routing in the PVT RTB i.e 
+	0.0.0.0/0 -> NAT-GW-ID

@@ -1,0 +1,31 @@
+LAB - Metadata
+
+Metadata: 
+
+curl http://169.254.169.254/latest/meta-data/
+curl http://169.254.169.254/latest/meta-data/ami-id
+
+> vim script.sh
+
+#!/bin/bash
+var_os=`curl -s http://169.254.169.254/latest/meta-data/ami-id`
+echo $var_os
+
+See we retrieved the ami-id and we are gonna perform actions using the value.
+
+
+#!/bin/bash
+var_os=`curl -s http://169.254.169.254/latest/meta-data/ami-id`
+if [ $var_os == "ami-09d95fab7fff3776c" ]
+then
+sudo yum -y install httpd
+sudo yum -y install git
+sudo systemctl start httpd
+sudo git clone https://github.com/ravi2krishna/ecomm.git /var/www/html
+else
+sudo apt-get -y install apache2
+sudo apt-get -y install git
+sudo systemctl start apache2
+sudo rm /var/www/html/index.html
+sudo git clone https://github.com/ravi2krishna/ecomm.git /var/www/html
+fi

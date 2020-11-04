@@ -1,0 +1,22 @@
+LAB - EFS
+
+
+	> Shared access to multiple instances
+
+	> Launch Linux instance with AMI :: Amazon Linux 2 in public subnet tag it as PRIMARY
+
+	> Create EFS from Storage Section i.e in Services -> Storage -> EFS
+
+	> EFS needs to be launched in Subnets choose the Public Subnets in two diff AZ's
+
+	> EFS works on port 2049(NFS), create a security group to allow NFS
+
+	> In order to connect to EFS storage we need NFS utilities
+
+	> Install NFS utilities on PRIMARY instance, by following the instructions given in EFS page once EFS is in available state
+
+-> Now launch another Linux instance with AMI :: Amazon Linux 2 in public subnet tag it as SECONDARY
+
+	> In order to connect to EFS storage we need NFS utilities
+
+	> Install NFS utilities on SECONDARY instance, by following the instructions given in EFS page once EFS is in available state

@@ -1,0 +1,49 @@
+LAB - Additional Volumes
+
+	> Launch Linux instance with AMI :: Amazon Linux 2 in public subnet and tag it as Linux
+
+	> To check available disks using the following commands
+
+		> lsblk - lsblk lists information about all the available block devices
+
+		> df - report file system disk space usage
+
+			> lsblk
+			> df -h
+
+
+	> Now create a 15 GB Additional volume and attach the volume to current running Linux instance
+
+
+	> Steps to attach the Volumes to Linux Instance
+	
+		EC2 Dashboard > Volumes > Select 15 GB Volume > Actions > Attach > Select Linux Server
+	
+	> To check available disks using the following commands
+		
+		# lsblk
+		# df -h
+
+	
+> mkfs is a command used to format storage device with specific file system, now will format the volume to ext4 filesystem	
+
+> sudo mkfs -t ext4 /dev/xvdf			
+
+ > Create a directory of your choice to mount our new ext4 volume. I am using the name myvol
+    
+    	> sudo mkdir /mnt/myvol	
+    	> sudo mount /dev/xvdf /mnt/myvol	
+
+    > Confirm with the df -h command
+    	> df -h
+	
+    > Create few files in /myvol
+    	> cd /mnt/myvol	
+    	> ls  	
+    	> sudo touch myfile.txt
+    	> ls
+
+Now you can attach the same volume for multiple instances and and check the file using same mount command 
+
+> sudo mkdir /mnt/myvol	
+> sudo mount /dev/xvdf /mnt/myvol	

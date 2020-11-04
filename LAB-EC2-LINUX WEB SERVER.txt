@@ -1,0 +1,54 @@
+LAB - EC2 - Linux Web Server 
+
+
+	> Create an Instance with Amazon Linux 2 As Operating System in Public Subnet and tag it as Web Server
+
+	> Attach an Elastic IP to Web Server
+
+		> Steps to attach Elastic IP
+
+			Services -> EC2 -> Left pane -> NETWORK & SECURITY -> Click Elastic IP's -> Allocate New Address -> Amazon Pool -> Select/Checkmark EIP -> Actions > Associate Address > Select Web Server Instance > Associate		
+
+	> Steps to setup Web Server
+
+		> Once logged into Web Server, run following commands to setup web server
+
+			> rpm -qi httpd
+
+			> sudo yum -y install httpd
+
+			> rpm -qi httpd
+
+			> sudo netstat -ntpl | grep 80
+
+			> sudo systemctl status httpd			
+                                                      > sudo systemctl enable httpd
+			> sudo systemctl start httpd
+
+			> sudo systemctl status httpd	
+
+			> sudo netstat -ntpl | grep 80
+
+			> Browse the Public IP of Web Server
+
+	> Developers use Source Code Management Tool i.e Github			
+
+	> Ecommerce Application Code is hosted in 
+	
+		https://github.com/ravi2krishna/ecomm-temp		
+
+	> Connect to Web server and list the content of following directory
+		
+		> ls /var/www/html { DocumentRoot }	
+
+	> Get the code to DocumentRoot using git
+
+		> sudo yum -y install git
+
+		> sudo git clone https://github.com/ravi2krishna/ecomm-temp.git  /var/www/html
+
+		> ls /var/www/html
+
+		> Browse the Public IP of Web Server
+		
+		> Now stop and start the server back, and see if the Elastic IP got changed ? As you can see it's the same, which is useful in DNS
